@@ -56,6 +56,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/attendances/export', [\App\Http\Controllers\Admin\AttendanceController::class, 'export']);
     Route::get('/admin/sessions/{id}', [\App\Http\Controllers\Admin\AttendanceSessionController::class, 'show']);
     Route::post('/admin/sessions/{id}/manual-attendance', [\App\Http\Controllers\Admin\AttendanceSessionController::class, 'manualAttendance']);
+    Route::get('/create-admin-now', function () {
+        \App\Models\User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
+
+        return 'Admin berhasil dibuat';
+    });
 });
 
 Route::middleware(['auth', 'role:operator'])->group(function () {
