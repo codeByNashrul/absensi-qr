@@ -18,11 +18,15 @@ WORKDIR /app
 
 COPY . .
 
+RUN rm -f public/hot
+
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 RUN npm install
 RUN npm run build
 
-RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs bootstrap/cache
-RUN chmod -R 777 storage bootstrap/cache
+RUN ls -la public/build
 
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}
+RUN mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache public/build
+
+CMD php artisan config:clear && php artisan view:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT}
